@@ -1,10 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
-<title>Insert title here</title>
+  <meta charset="EUC-KR">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Server SSH Longin Test</title>
 </head>
 <body>
+  <script>
+    function connectSSH() {
+        let serverip = document.getElementById('serverip').value;
+        let username = document.getElementById('username').value;
+        let password = document.getElementById('password').value;
+        
+        fetch('/connect_ssh', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({serverip, username, password})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Connected! Output:\n' + data.output);
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
 
 <h2> 로그인</h2>
 

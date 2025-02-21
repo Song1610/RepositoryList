@@ -3,21 +3,22 @@ import paramiko
 
 app = Flask(__name__)
 
-@app.route('/button')
+@app.route('/')
 def index():
-    return render_template('index.html')
+    #return render_template('index.html')
+    return render_template('index2.html')
 
 @app.route('/connect_ssh', methods=['POST'])
 def connect_ssh():
     data = request.json
-    hostname = data.get('hostname')
+    serverip = data.get('serverip')
     username = data.get('username')
     password = data.get('password')
     
     try:
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(hostname, username=username, password=password)
+        client.connect(serverip, username=username, password=password)
         
         stdin, stdout, stderr = client.exec_command('ls')  # 테스트용 명령어 실행
         output = stdout.read().decode()

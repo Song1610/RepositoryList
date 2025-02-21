@@ -1,13 +1,14 @@
 from flask import Flask
 app = Flask(__name__)
 
-# @app.route('/')
-# def index():
-#    return render_template('index.html')
-
 @app.route('/')
 def index():
-   return 'hello world!'
+   #return render_template('index.html')
+   return render_template('index2.html')
+
+# @app.route('/')
+# def index():
+#    return 'hello world!'
 
 # @app.route('/button')
 # def index():
