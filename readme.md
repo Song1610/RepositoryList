@@ -7,3 +7,4 @@ http://localhost:5000/
 - add file(all)
 - 1013i update(index2.html app.py, ssh_access.py)
 - 1017i update indexname
+- 1248i update file 
