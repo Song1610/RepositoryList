@@ -1,0 +1,52 @@
+<!-- 250221 작성-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server SSH Login Test</title>
+    <script>
+        function connectSSH(event) {
+            event.preventDefault();
+
+            let serverip = document.getElementById('serverip').value;
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('password').value;
+            
+            fetch('/connect_ssh', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({serverip, username, password})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Connected! Output:\n' + data.output);
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body>
+
+    <h2>로그인</h2>
+
+    <!-- POST 방식으로 SSH 연결 요청 -->
+    <form onsubmit="connectSSH(event)">
+        <label>HostIP :</label><br>
+        <input type="text" id="serverip" name="serverip" value="[안알려줌]" required><br>
+
+        <label>Username :</label><br>
+        <input type="text" id="username" name="username" value="[안알려줌]" required><br>
+
+        <label>Password :</label><br>
+        <input type="password" id="password" name="password" value="[안알려줌]" required><br><br>
+
+        <input type="submit" value="Access">
+    </form>
+
+</body>
+</html>

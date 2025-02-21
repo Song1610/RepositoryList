@@ -1,51 +1,38 @@
+<!-- 250219 작성-->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server SSH Login Test</title>
-    <script>
-        function connectSSH(event) {
-            event.preventDefault();
+  <meta charset="EUC-KR">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            let serverip = document.getElementById('serverip').value;
-            let username = document.getElementById('username').value;
-            let password = document.getElementById('password').value;
-            
-            fetch('/connect_ssh', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({serverip, username, password})
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert('Connected! Output:\n' + data.output);
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    </script>
+<title>Server SSH Longin Test</title>
 </head>
 <body>
 
-    <h2>로그인</h2>
+</script>
 
-    <!-- POST 방식으로 SSH 연결 요청 -->
-    <form onsubmit="connectSSH(event)">
-        <label>HostIP :</label><br>
-        <input type="text" id="serverip" name="serverip" value="[안알려줌]" required><br>
+<h2> 로그인</h2>
 
-        <label>Username :</label><br>
-        <input type="text" id="username" name="username" value="[안알려줌]" required><br>
+<!-- "로그인" 클릭(submi)시 호출 -->
+<form action="playdata" method = "get">
 
-        <label>Password :</label><br>
-        <input type="password" id="password" name="password" value="[안알려줌]" required><br><br>
+<!-- label : 단순히 브라우저에 출력하는 메세지(host IP) -->
+<label>HostIP :</label><br>
+<input type="text" name="HostIP" value="192.168.9.9"><br>
 
-        <input type="submit" value="Access">
-    </form>
+<!-- label : 단순히 브라우저에 출력하는 메세지(UserName) -->
+  <label>Username :</label><br>
+  <input type="text" name="UserName" value="appuser"><br>
+  
+<!-- pw를 보이지 않게 하기위해 type = "password"로 변경 
+	<br> tag가 없으면 라인이 붙어서 나온다. -->
+  <label>Password :</label><br>
+  <input type="password" name="Password" value="appuserpw"><br><br>
+
+<!-- submit을 누르면 id,pw값을 서버에 밀어넣는다, 위치는 어디든 상관 x -->	
+  <input type="submit" value="access">
+</form> 
 
 </body>
 </html>
