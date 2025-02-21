@@ -6,3 +6,4 @@ http://localhost:5000/
 - new repository
 - add file(all)
 - 1013i update(index2.html app.py, ssh_access.py)
+- 1017i update indexname
