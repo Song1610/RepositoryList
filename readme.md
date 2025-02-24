@@ -2,6 +2,9 @@
 http://localhost:5000/
 
 # 수정
+25-02-24
+- 240224 1356i update
+
 25-02-21
 - new repository
 - add file(all)
