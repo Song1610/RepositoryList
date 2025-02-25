@@ -10,4 +10,7 @@ http://localhost:5000/
 - add file(all)
 - 1013i update(index2.html app.py, ssh_access.py)
 - 1017i update indexname
-- 1248i update file 
+- 1248i update file
+
+25-02-26
+- git repository rename and remote-url reset : SSH_Access_TEST
