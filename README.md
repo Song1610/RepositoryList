@@ -1,5 +1,6 @@
 # etc
 각종 리포지토리 모아놓은 것
+마지막 수정일 : 25-04-05
 
 ## repository
 1. training_memos_230515
