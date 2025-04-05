@@ -1,0 +1,59 @@
+# cloudbuild_prod3.yaml
+
+steps:
+### Build
+  - id: 'build'
+    name: 'cloud-builders/docker'
+#    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: 
+      - 'docker'
+      - 'build'
+      - '-t'
+      - 'corelab/gceme:$TAG_NAME'
+      - '.'
+### Test
+### Push
+  - id: 'push'
+    name: 'cloud-builders/docker'
+    entrypoint: 'bash'
+    args: 
+      - 'docker'
+      - 'push'
+      - 'corelab/gceme:$TAG_NAME'
+## Deploy
+  - id: 'deploy'
+    name: 'cloud-builders/gcloud'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=${_CLOUDSDK_COMPUTE_REGION}'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
+      - 'KUBECONFIG=/kube/config'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+          _CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}
+          PROJECT=$$(gcloud config get-value core/project)
+          _REGION=${_CLOUDSDK_COMPUTE_REGION}
+          gcloud container clusters get-credentials "$${_CLUSTER}" \
+            --project "$${_PROJECT_ID}" \
+            --region "$${_REGION}"  
+          sed -i 's|corelab/gceme:.*|corelab/gceme:$TAG_NAME|' /home/songtest_16/container-builder-workshop/*.yaml
+          
+          kubectl get ns production || kubectl create ns production
+          kubectl apply --namespace production --recursive -f /home/songtest_16/container-builder-workshop/prod
+          kubectl apply --namespace production --recursive -f /home/songtest_16/container-builder-workshop/services
+
+
+# 변수 설정(env for cloud build)
+substitutions:
+  # image
+  TAG_NAME: 1.0.1
+  #TAG_NAME: 9f401e8-dirty-83a754b
+
+  #_GKE_CLUSTER: nat-cluster
+  _PROJECT_ID: sound-works-376501
+  _CLUSTER: private-cluster
+  _REGION: us-west1
+
+  
