@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSH Terminal</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        var socket = io();
+        var sshWindow;
+
+        function openSSHPopup() {
+            let serverip = document.getElementById('serverip').value;
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('password').value;
+
+            sshWindow = window.open("", "SSH Terminal_test", "width=800,height=500");
+            sshWindow.document.write(`
+                <html>
+                <head>
+                    <title> SSH Terminal_test </title>
+                    <style>
+                        body { background-color: black; color: white; font-family: monospace; padding: 10px; }
+                        #ssh_output { white-space: pre-wrap; height: 400px; overflow-y: auto; border: 1px solid white; padding: 5px; background-color: black; color: white; }
+                        #commandInput { width: 100%; background: black; color: white; border: 1px solid white; font-family: monospace; padding: 5px; width: 100%; }
+                    </style>
+                </head>
+                <body>
+                    <h2>SSH Terminal_test</h2>
+                    <pre id='ssh_output'></pre>
+                    <input type="text" id="commandInput" placeholder="명령어 입력 후 Enter" autofocus>
+                    <script>
+                        var outputElement = document.getElementById('ssh_output');
+                        var inputElement = document.getElementById('commandInput');
+
+                        inputElement.addEventListener("keypress", function(event) {
+                            if (event.key === "Enter") {
+                                event.preventDefault();
+                                let command = inputElement.value.trim();
+                                if (command !== "") {
+                                    // 명령어를 터미널에 먼저 표시
+                                    outputElement.innerHTML += "\\n[saa@bastion-tt ~]$ " + command + "\\n";
+                                    window.opener.socket.emit('execute_command', { command: command });
+                                    inputElement.value = "";
+                                }
+                            }
+                        });
+
+                        // SSH 접속 성공 메시지 표시
+                        window.opener.socket.on('ssh_connected', function(data) {
+                            outputElement.innerHTML += "SSH 연결 성공\\n";
+                        });
+
+                        // 서버에서 받은 SSH 출력 표시 (명령어 결과)
+                        window.opener.socket.on('ssh_output', function(data) {
+                            console.log("받은 ssh 출력: ", data.messate);   // ← 콘솔 로그 추가
+                            outputElement.innerHTML += data.message + "\\n";
+                            outputElement.scrollTop = outputElement.scrollHeight; // 자동 스크롤
+                        });
+
+                    <\/script>
+                </body>
+                </html>
+            `);
+
+            // SSH 연결 요청
+            socket.emit('connect_ssh', { serverip: serverip, username: username, password: password });
+
+            // SSH 연결 성공 시 'ssh_connected' 이벤트 발생
+            socket.on('ssh_connected', function(data) {
+                if (sshWindow && !sshWindow.closed) {
+                    sshWindow.document.getElementById('ssh_output').innerHTML += "Last login: Mon Feb 24 09:46:04 2025 from 150.150.160.193\\n[saa@bastion-tt ~]$ ";
+                }
+            });
+
+            // 서버에서 받은 SSH 출력 팝업창에 표시
+            socket.on('ssh_output', function(data) {
+                if (sshWindow && !sshWindow.closed) {
+                    let sshOutput = sshWindow.document.getElementById('ssh_output');
+                    sshOutput.innerHTML += data.message + "\\n";
+                    sshOutput.scrollTop = sshOutput.scrollHeight; // 자동 스크롤
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <h2>SSH 접속</h2>
+
+    <form onsubmit="event.preventDefault(); openSSHPopup();">
+        <label>HostIP :</label><br>
+        <input type="text" id="serverip" name="serverip" value="[작성]" required><br>
+
+        <label>Username :</label><br>
+        <input type="text" id="username" name="username" value="[작성]" required><br>
+
+        <label>Password :</label><br>
+        <input type="text" id="password" name="password" value="[작성]" required><br><br>
+
+        <input type="submit" value="Access">
+    </form>
+
+
+</body>
+</html>

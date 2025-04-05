@@ -1,0 +1,38 @@
+<!-- 250219 작성-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="EUC-KR">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Server SSH Longin Test</title>
+</head>
+<body>
+
+</script>
+
+<h2> 로그인</h2>
+
+<!-- "로그인" 클릭(submi)시 호출 -->
+<form action="playdata" method = "get">
+
+<!-- label : 단순히 브라우저에 출력하는 메세지(host IP) -->
+<label>HostIP :</label><br>
+<input type="text" name="HostIP" value="192.168.9.9"><br>
+
+<!-- label : 단순히 브라우저에 출력하는 메세지(UserName) -->
+  <label>Username :</label><br>
+  <input type="text" name="UserName" value="appuser"><br>
+  
+<!-- pw를 보이지 않게 하기위해 type = "password"로 변경 
+	<br> tag가 없으면 라인이 붙어서 나온다. -->
+  <label>Password :</label><br>
+  <input type="password" name="Password" value="appuserpw"><br><br>
+
+<!-- submit을 누르면 id,pw값을 서버에 밀어넣는다, 위치는 어디든 상관 x -->	
+  <input type="submit" value="access">
+</form> 
+
+</body>
+</html>
